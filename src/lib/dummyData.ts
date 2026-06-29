@@ -1,3 +1,4 @@
+import { seededHeatValue } from "@/lib/heatmapUtils";
 import type {
   CostTrendPoint,
   ExecutiveKPI,
@@ -162,10 +163,7 @@ export function generateWaferHeatData(size = 40): number[][] {
         rowData.push(-1);
       } else {
         const edgeFactor = dist / radius;
-        const value = Math.min(
-          1,
-          Math.max(0, edgeFactor * 0.6 + Math.random() * 0.5)
-        );
+        const value = Math.min(1, Math.max(0, edgeFactor * 0.6 + seededHeatValue(row, col, size, size, 0, 1) * 0.5));
         rowData.push(value);
       }
     }

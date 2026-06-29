@@ -1,3 +1,4 @@
+import { generateGridHeatmap } from "@/lib/heatmapUtils";
 import type {
   AIRecommendationRow,
   BankFailData,
@@ -199,17 +200,9 @@ export const riskCards: RiskCard[] = [
   { title: "Estimated Cost Savings", value: "$186K", subtitle: "Monthly projected savings", icon: "dollar" },
 ];
 
+
 export function generateMemoryHeatmap(rows = 14, cols = 20): { value: number; row: number; col: number }[] {
-  const data: { value: number; row: number; col: number }[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const centerDist = Math.sqrt((row - rows / 2) ** 2 + (col - cols / 2) ** 2);
-      const edgeFactor = centerDist / (rows / 2);
-      const value = Math.min(1, Math.max(0, edgeFactor * 0.35 + Math.random() * 0.65));
-      data.push({ value, row, col });
-    }
-  }
-  return data;
+  return generateGridHeatmap(rows, cols, 0.35, 0.65);
 }
 
 export const connectivityNodes = {

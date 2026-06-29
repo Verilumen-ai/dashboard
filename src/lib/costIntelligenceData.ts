@@ -1,3 +1,4 @@
+import { generateGridHeatmap } from "@/lib/heatmapUtils";
 import type {
   AICostRecommendationRow,
   AICostSummary,
@@ -188,13 +189,5 @@ export const waferCostTrend: TrendPoint[] = [
 ];
 
 export function generateWaferCostHeatmap(rows = 12, cols = 16): { value: number; row: number; col: number }[] {
-  const data: { value: number; row: number; col: number }[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const centerDist = Math.sqrt((row - rows / 2) ** 2 + (col - cols / 2) ** 2);
-      const value = Math.min(1, Math.max(0, centerDist / (rows / 2) * 0.5 + Math.random() * 0.5));
-      data.push({ value, row, col });
-    }
-  }
-  return data;
+  return generateGridHeatmap(rows, cols, 0.5, 0.5);
 }

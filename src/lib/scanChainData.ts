@@ -1,3 +1,4 @@
+import { generateGridHeatmap } from "@/lib/heatmapUtils";
 import type {
   AIDiagnosisSummary,
   AIRecommendationRow,
@@ -539,21 +540,7 @@ export function generateScanChainHeatmap(
   rows = 16,
   cols = 24
 ): { value: number; row: number; col: number }[] {
-  const data: { value: number; row: number; col: number }[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const centerDist = Math.sqrt(
-        (row - rows / 2) ** 2 + (col - cols / 2) ** 2
-      );
-      const edgeFactor = centerDist / (rows / 2);
-      const value = Math.min(
-        1,
-        Math.max(0, edgeFactor * 0.4 + Math.random() * 0.6)
-      );
-      data.push({ value, row, col });
-    }
-  }
-  return data;
+  return generateGridHeatmap(rows, cols, 0.4, 0.6);
 }
 
 export const connectivityGraphData = {
