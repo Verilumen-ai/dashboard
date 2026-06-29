@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cursor hook session state
+.cursor/hooks/.session-state.json
+.cursor/hooks/.pending-prompt.json
