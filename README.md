@@ -36,6 +36,7 @@ Open [http://localhost:3000/dashboard](http://localhost:3000/dashboard) or [http
 | `/recommendation-analysis` | Centralized AI Recommendation Analysis with 5 tabs (Overview, Scan Chain, MBIST, LBIST, Wafer Analysis) |
 | `/cost-intelligence` | Cost Intelligence dashboard with 6 tabs (Overview, Scan Chain, MBIST, LBIST, Wafer, AI Cost Optimization) |
 | `/alerts` | Enterprise Alerts dashboard with 7 tabs consolidating all module alerts |
+| Upload Data / Upload Log File | Top navbar modals — frontend UI only (react-dropzone, simulated progress) |
 | `/dashboard/recommendation-analysis` | Redirects to `/recommendation-analysis` |
 | `/settings` | Theme Settings & Account Presets |
 | `/` | Redirects to `/dashboard` |
@@ -115,6 +116,10 @@ This project was built incrementally using Cursor AI prompts. Each prompt genera
 | **STEP 17** | MBIST Analysis Dashboard | `/mbist` page, 5 tabs, KPIs, charts, tables, AI diagnosis |
 | **STEP 18** | LBIST Analysis Dashboard | `/lbist` page, 5 tabs, KPIs, charts, tables, AI diagnosis |
 | **STEP 19** | Recommendation Analysis Dashboard | `/recommendation-analysis` page, 5 tabs, unified AI recommendations |
+| **STEP 20** | Cost Intelligence Dashboard | `/cost-intelligence` page, 6 tabs, cost optimization |
+| **STEP 21** | Alerts Dashboard | `/alerts` page, 7 tabs, enterprise alert center |
+| **STEP 22** | Upload Test Data | Top navbar Upload Data modal — frontend UI only |
+| **STEP 23** | Upload Log File | Top navbar Upload Log File modal — frontend UI only |
 
 Full prompt log (CSV): [`prompts.csv`](./prompts.csv)
 
@@ -356,6 +361,25 @@ Overview: 6 KPIs, source donut, priority bar chart, trend line chart, unified re
 AI executive summary, recommendation engine panel, animated workflow, bottom AI summary.
 Module tabs: domain KPIs, charts, and recommendation tables per analysis module.
 Priority badges: Critical (red), High (orange), Medium (yellow), Low (green).
+```
+
+### STEP 22 — Upload Test Data (Frontend UI)
+
+```
+Add enterprise Upload Test Data feature to top navbar. UploadCloud button purple gradient.
+Modal: drag-drop react-dropzone, dataset category, metadata, progress bar, upload history table.
+Supported STDF STIL WGL CSV XLSX JSON ZIP XML. Max 10GB. Frontend UI/UX only — no backend.
+Simulated upload progress, toast notifications, client-side history state.
+```
+
+### STEP 23 — Upload Log File (Frontend UI)
+
+```
+Add enterprise Upload Log File button beside Upload Data. FileText icon dark glass purple border.
+Modal: ATE log upload, log source, tester dropdown, metadata, file validation, progress,
+5-step processing pipeline, AI log summary, upload history table with actions.
+Supported STDF STIL WGL LOG TXT CSV JSON XML ZIP GZ. Max 5GB. Frontend UI/UX only — no backend.
+Toast notifications for upload started, completed, failed, parsing complete, AI analysis ready.
 ```
 
 <!-- PROMPT_ARCHIVE_END -->
@@ -607,10 +631,12 @@ interface OptimizationResults {
 | Recommendation Analysis | ✅ Complete | 5 tabs, unified AI recommendations, module-specific views |
 | Cost Intelligence | ✅ Complete | 6 tabs, cost contribution, AI optimization, enterprise summary |
 | Alerts | ✅ Complete | 7 tabs, real-time alert center, workflow, executive summary |
+| Upload Data | ✅ Complete | Modal, drag-drop, metadata, progress, history (UI only) |
+| Upload Log File | ✅ Complete | Modal, validation, pipeline, AI summary, history (UI only) |
 | Settings persistence | ✅ Complete | Saved to `localStorage` |
 | Wafer Heatmap | ✅ Complete | Pan, zoom, fullscreen, 3 overlays |
 | Pattern Table | ✅ Complete | Sort, search, paginate |
-| Real backend / API | ⚠️ Not implemented | All data is mocked in `dummyData.ts` |
+| Real backend / API | ⚠️ Not implemented | All data is mocked; uploads are simulated client-side only |
 | AI Optimization | ⚠️ Simulated | Uses `setTimeout` (1.8s) — no real model |
 | Sidebar filters | ⚠️ UI only | Dropdowns don't filter charts/tables |
 | Search bar | ⚠️ Cosmetic | No search logic implemented |

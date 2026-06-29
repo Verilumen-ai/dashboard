@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { UploadToastStack } from "@/components/upload/UploadToastStack";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { UploadProvider } from "@/contexts/UploadContext";
 import "./globals.css";
 import "@/styles/globals.css";
 
@@ -28,7 +30,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <ThemeProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <UploadProvider>
+            <QueryProvider>
+              {children}
+              <UploadToastStack />
+            </QueryProvider>
+          </UploadProvider>
         </ThemeProvider>
       </body>
     </html>
