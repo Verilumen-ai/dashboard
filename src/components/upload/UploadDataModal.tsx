@@ -44,7 +44,7 @@ interface UploadDataModalProps {
 }
 
 export function UploadDataModal({ open, onOpenChange }: UploadDataModalProps) {
-  const { addDataUpload, updateDataStatus, showToast } = useUpload();
+  const { addDataUpload, updateDataStatus, showToast, cacheFileContent } = useUpload();
   const [files, setFiles] = useState<File[]>([]);
   const [module, setModule] = useState<DataModule>("Auto Detect");
   const [fab, setFab] = useState("Fab-12");
@@ -92,6 +92,7 @@ export function UploadDataModal({ open, onOpenChange }: UploadDataModalProps) {
     updateDataStatus(id, "Processing");
     await new Promise((r) => setTimeout(r, 800));
     updateDataStatus(id, "Completed");
+    cacheFileContent(id, `Uploaded dataset: ${file.name}\nModule: ${module}\nFab: ${fab}\nTester: ${tester}`);
     setUploading(false);
     showToast("File uploaded successfully. Dashboards will refresh with new data.", "success");
     showToast("AI analysis ready for imported dataset.", "info");

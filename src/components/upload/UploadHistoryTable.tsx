@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { downloadBlob } from "@/lib/exportUtils";
 import { useUpload } from "@/contexts/UploadContext";
 import type { DataUploadRecord, LogUploadRecord, UploadStatus } from "@/types/upload";
 
@@ -41,7 +42,7 @@ function StatusBadge({ status }: { status: UploadStatus }) {
 }
 
 export function DataUploadHistoryTable() {
-  const { dataHistory, removeDataUpload, showToast } = useUpload();
+  const { dataHistory, removeDataUpload, showToast, getCachedContent } = useUpload();
   const [search, setSearch] = useState("");
   const [moduleFilter, setModuleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -92,7 +93,11 @@ export function DataUploadHistoryTable() {
               <TableCell>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => showToast(`Viewing ${row.fileName}`, "info")}><Eye className="h-3.5 w-3.5" /></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => showToast(`Download started: ${row.fileName}`, "info")}><Download className="h-3.5 w-3.5" /></Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => {
+                    const content = getCachedContent(row.id) ?? `Mock export for ${row.fileName}\nModule: ${row.module}\nStatus: ${row.status}`;
+                    downloadBlob(content, row.fileName, "text/plain");
+                    showToast(`Download started: ${row.fileName}`, "success");
+                  }}><Download className="h-3.5 w-3.5" /></Button>
                   {row.status === "Failed" && (
                     <Button variant="ghost" size="icon" className="h-7 w-7 text-[#7C3AED]" onClick={() => showToast(`Retry queued: ${row.fileName}`, "info")}><RefreshCw className="h-3.5 w-3.5" /></Button>
                   )}
@@ -108,7 +113,7 @@ export function DataUploadHistoryTable() {
 }
 
 export function LogUploadHistoryTable() {
-  const { logHistory, removeLogUpload, showToast } = useUpload();
+  const { logHistory, removeLogUpload, showToast, getCachedContent } = useUpload();
   const [search, setSearch] = useState("");
   const [moduleFilter, setModuleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -163,7 +168,11 @@ export function LogUploadHistoryTable() {
               <TableCell>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => showToast(`Viewing ${row.fileName}`, "info")}><Eye className="h-3.5 w-3.5" /></Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => showToast(`Download started: ${row.fileName}`, "info")}><Download className="h-3.5 w-3.5" /></Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-white" onClick={() => {
+                    const content = getCachedContent(row.id) ?? `Mock export for ${row.fileName}\nModule: ${row.module}\nStatus: ${row.status}`;
+                    downloadBlob(content, row.fileName, "text/plain");
+                    showToast(`Download started: ${row.fileName}`, "success");
+                  }}><Download className="h-3.5 w-3.5" /></Button>
                   {row.status === "Failed" && (
                     <Button variant="ghost" size="icon" className="h-7 w-7 text-[#7C3AED]" onClick={() => showToast(`Retry queued: ${row.fileName}`, "info")}><RefreshCw className="h-3.5 w-3.5" /></Button>
                   )}

@@ -5,7 +5,13 @@ import { Brain, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { LbistAIDiagnosis } from "@/types/lbist";
 
-export function LBISTAIDiagnosisCard({ data }: { data: LbistAIDiagnosis }) {
+export function LBISTAIDiagnosisCard({
+  data,
+  onRunDiagnosis,
+}: {
+  data: LbistAIDiagnosis;
+  onRunDiagnosis?: () => void;
+}) {
   const metrics = [
     { label: "Likely Root Cause", value: data.likelyRootCause, wide: true },
     { label: "Critical Logic Blocks", value: data.criticalLogicBlocks.toString() },
@@ -27,7 +33,7 @@ export function LBISTAIDiagnosisCard({ data }: { data: LbistAIDiagnosis }) {
             <p className="text-sm text-slate-400">ML-powered LBIST root cause analysis</p>
           </div>
         </div>
-        <Button size="sm" className="btn-glow rounded-xl bg-[#7C3AED] text-xs hover:bg-[#6D28D9]">
+        <Button size="sm" className="btn-glow rounded-xl bg-[#7C3AED] text-xs hover:bg-[#6D28D9]" onClick={onRunDiagnosis}>
           <Sparkles className="mr-1.5 h-3.5 w-3.5" />
           Run AI LBIST Diagnosis
         </Button>

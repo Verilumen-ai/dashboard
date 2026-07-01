@@ -8,15 +8,14 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { OptimizationEngine } from "@/components/optimization/OptimizationEngine";
 import { OptimizationResult } from "@/components/results/OptimizationResult";
 import { PatternTable } from "@/components/tables/PatternTable";
-import {
-  costTrendData,
-  defaultOptimizationResults,
-  executiveKPIs,
-  patternAnalysisData,
-} from "@/lib/dummyData";
+import { useFilteredExecutiveData } from "@/hooks/usePlatformData";
+import { useActionStore } from "@/stores/actionStore";
+import { defaultOptimizationResults } from "@/lib/dummyData";
 import type { OptimizationParams, OptimizationResults } from "@/types/dashboard";
 
 export default function DashboardPage() {
+  const { data } = useFilteredExecutiveData();
+  const lastPrimaryResult = useActionStore((s) => s.lastPrimaryResult);
   const [results, setResults] = useState<OptimizationResults | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -28,29 +27,34 @@ export default function DashboardPage() {
     setIsRunning(false);
   };
 
+  const displayResults =
+    results ??
+    (lastPrimaryResult?.pageId === "dashboard"
+      ? {
+          costReduction: 12.4,
+          timeSavings: 8.2,
+          projectedYield: 95.1,
+          patternsReduced: 24,
+          totalSavings: 284000,
+        }
+      : null);
+
   return (
-    <DashboardLayout title="Executive Dashboard">
+    <DashboardLayout
+      title="Executive Dashboard"
+      pageId="dashboard"
+      primaryActionLabel="AI Optimize"
+    >
       <div className="dashboard-content">
-        <div id="scan-chain">
-          <ExecutiveKPIGrid data={executiveKPIs} />
-        </div>
-
+        <ExecutiveKPIGrid data={data.kpis} />
         <WaferHeatmap />
-
         <div className="grid gap-6 lg:grid-cols-2">
-          <CostTrendChart data={costTrendData} />
-          <div id="mbist">
-            <PatternTable data={patternAnalysisData} />
-          </div>
+          <CostTrendChart data={data.costTrend} />
+          <PatternTable data={data.patterns} />
         </div>
-
         <div className="grid gap-6 lg:grid-cols-2">
-          <div id="lbist">
-            <OptimizationEngine onRun={handleRunOptimization} isRunning={isRunning} />
-          </div>
-          <div id="alerts">
-            <OptimizationResult results={results} />
-          </div>
+          <OptimizationEngine onRun={handleRunOptimization} isRunning={isRunning} />
+          <OptimizationResult results={displayResults} />
         </div>
       </div>
     </DashboardLayout>

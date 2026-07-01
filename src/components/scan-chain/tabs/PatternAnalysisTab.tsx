@@ -1,91 +1,77 @@
 "use client";
 
-import { VerticalBarChart } from "@/components/scan-chain/charts/BarCharts";
 import { TrendLineChart } from "@/components/scan-chain/charts/LineCharts";
+import { DistributionPie } from "@/components/scan-chain/charts/PieCharts";
 import { ChartCard } from "@/components/scan-chain/ChartCard";
-import { DataTable, PriorityBadge, StatusBadge } from "@/components/scan-chain/DataTable";
-import { KPIGrid } from "@/components/scan-chain/KPICard";
+import { DataTable, StatusBadge } from "@/components/scan-chain/DataTable";
+import { PatternKPIGrid } from "@/components/scan-chain/pattern/PatternKPIGrid";
+import { PatternScatterChart } from "@/components/scan-chain/pattern/PatternScatterChart";
 import {
-  patternCostTrend,
-  patternCoverageTrend,
-  patternDensityData,
-  patternExecutionTrend,
-  patternKPIs,
-  patternRecommendations,
-  patternSummaryData,
+  patternAnalysisCoverageTrend,
+  patternAnalysisKPIs,
+  patternAnalysisRows,
+  patternClusterDistribution,
+  patternImportTrend,
+  patternScatterData,
 } from "@/lib/scanChainData";
 
 export function PatternAnalysisTab() {
   return (
     <div className="dashboard-content">
-      <KPIGrid data={patternKPIs} />
+      <PatternKPIGrid data={patternAnalysisKPIs} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <ChartCard
-          title="Pattern Execution Trend"
-          subtitle="Executed vs. scheduled patterns"
-        >
+        <ChartCard title="Pattern Import Trend" subtitle="Weekly imported vs. validated files">
           <TrendLineChart
-            data={patternExecutionTrend}
+            data={patternImportTrend}
             lines={[
-              { key: "value", color: "#7C3AED", name: "Executed" },
-              { key: "value2", color: "#06B6D4", name: "Scheduled" },
+              { key: "value", color: "#7C3AED", name: "Imported" },
+              { key: "value2", color: "#06B6D4", name: "Validated" },
             ]}
           />
         </ChartCard>
-
-        <ChartCard title="Pattern Cost" subtitle="Weekly test cost trend">
+        <ChartCard title="Pattern Coverage Trend" subtitle="ATPG fault coverage over time">
           <TrendLineChart
-            data={patternCostTrend}
-            lines={[{ key: "value", color: "#F97316", name: "Cost ($)" }]}
-          />
-        </ChartCard>
-
-        <ChartCard title="Pattern Coverage" subtitle="Coverage percentage over time">
-          <TrendLineChart
-            data={patternCoverageTrend}
+            data={patternAnalysisCoverageTrend}
             lines={[{ key: "value", color: "#22C55E", name: "Coverage %" }]}
           />
         </ChartCard>
+      </div>
 
-        <ChartCard title="Pattern Density" subtitle="Pattern density by segment">
-          <VerticalBarChart data={patternDensityData} color="#7C3AED" />
+      <div className="grid gap-6 lg:grid-cols-2">
+        <ChartCard title="Pattern Cluster Distribution" subtitle="AI cluster classification">
+          <DistributionPie data={patternClusterDistribution} />
+        </ChartCard>
+        <ChartCard title="Pattern Similarity" subtitle="Coverage vs. similarity score by cluster">
+          <PatternScatterChart data={patternScatterData} />
         </ChartCard>
       </div>
 
       <DataTable
-        title="Pattern Summary"
-        subtitle="Active scan test patterns and performance metrics"
-        data={patternSummaryData}
+        title="Pattern Analysis Table"
+        subtitle="Imported patterns with coverage, clustering, and AI quality scores"
+        data={patternAnalysisRows}
         rowKey="patternId"
-        searchKeys={["patternId", "status"]}
+        pageSize={6}
+        searchKeys={["patternId", "patternName", "fileType", "cluster", "status", "recommendation"]}
         searchPlaceholder="Search patterns..."
         columns={[
           {
             key: "patternId",
             label: "Pattern ID",
             render: (row) => (
-              <span className="font-mono text-xs font-medium text-white">
-                {row.patternId}
-              </span>
+              <span className="font-mono text-xs font-medium text-white">{row.patternId}</span>
             ),
           },
-          { key: "chainCount", label: "Chain Count" },
-          {
-            key: "coverage",
-            label: "Coverage",
-            render: (row) => `${row.coverage}%`,
-          },
-          {
-            key: "runtime",
-            label: "Runtime",
-            render: (row) => `${row.runtime}s`,
-          },
-          {
-            key: "efficiency",
-            label: "Efficiency",
-            render: (row) => `${row.efficiency}%`,
-          },
+          { key: "patternName", label: "Pattern Name" },
+          { key: "fileType", label: "File Type" },
+          { key: "coverage", label: "Coverage", render: (row) => `${row.coverage}%` },
+          { key: "compressionRatio", label: "Compression", render: (row) => row.compressionRatio.toFixed(2) },
+          { key: "vectors", label: "Vectors", render: (row) => row.vectors.toLocaleString() },
+          { key: "cluster", label: "Cluster" },
+          { key: "similarityScore", label: "Similarity", render: (row) => row.similarityScore.toFixed(2) },
+          { key: "redundancy", label: "Redundancy" },
+          { key: "qualityScore", label: "Quality", render: (row) => `${row.qualityScore}%` },
           {
             key: "status",
             label: "Status",
@@ -93,39 +79,15 @@ export function PatternAnalysisTab() {
               const variant =
                 row.status === "Active"
                   ? "success"
-                  : row.status === "Deprecated"
-                    ? "danger"
-                    : "neutral";
+                  : row.status === "Review"
+                    ? "warning"
+                    : row.status === "Redundant"
+                      ? "danger"
+                      : "neutral";
               return <StatusBadge status={row.status} variant={variant} />;
             },
           },
-        ]}
-      />
-
-      <DataTable
-        title="Pattern Recommendations"
-        subtitle="AI-generated optimization suggestions"
-        data={patternRecommendations}
-        rowKey="patternId"
-        searchKeys={["patternId", "issue", "recommendation"]}
-        searchPlaceholder="Search recommendations..."
-        columns={[
-          {
-            key: "patternId",
-            label: "Pattern ID",
-            render: (row) => (
-              <span className="font-mono text-xs font-medium text-white">
-                {row.patternId}
-              </span>
-            ),
-          },
-          { key: "issue", label: "Issue" },
           { key: "recommendation", label: "Recommendation" },
-          {
-            key: "priority",
-            label: "Priority",
-            render: (row) => <PriorityBadge priority={row.priority} />,
-          },
         ]}
       />
     </div>

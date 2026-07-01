@@ -3,9 +3,11 @@
 import { TrendAreaChart, TrendLineChart } from "@/components/scan-chain/charts/LineCharts";
 import { ChartCard } from "@/components/scan-chain/ChartCard";
 import { DataTable, StatusBadge } from "@/components/scan-chain/DataTable";
+import { AIDiagnosisProgress } from "@/components/platform/AIDiagnosisProgress";
 import { KPIGrid } from "@/components/mbist/KPICard";
 import { MBISTAIDiagnosisCard } from "@/components/mbist/MBISTAIDiagnosisCard";
 import { MemoryConnectivityGraph, RootCauseGraph } from "@/components/mbist/MemoryGraphs";
+import { useAIDiagnosis } from "@/hooks/usePrimaryAction";
 import {
   aiConfidenceTrend,
   aiDiagnosisSummary,
@@ -18,6 +20,8 @@ import {
 } from "@/lib/mbistData";
 
 export function DiagnosisTab() {
+  const { run, isRunning, step, result } = useAIDiagnosis("mbist");
+
   return (
     <div className="dashboard-content">
       <KPIGrid data={diagnosisKPIs} />
@@ -82,7 +86,8 @@ export function DiagnosisTab() {
           ]}
         />
       </div>
-      <MBISTAIDiagnosisCard data={aiDiagnosisSummary} />
+      <MBISTAIDiagnosisCard data={aiDiagnosisSummary} onRunDiagnosis={run} />
+      <AIDiagnosisProgress running={isRunning} step={step} result={result} />
     </div>
   );
 }

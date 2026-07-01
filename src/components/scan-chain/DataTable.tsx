@@ -113,6 +113,7 @@ export function DataTable<T extends object>({
                   setPage(0);
                 }}
                 className="h-9 border-[#2D3748] bg-[#0A1020] pl-9 text-sm"
+                suppressHydrationWarning
               />
             </div>
           )}

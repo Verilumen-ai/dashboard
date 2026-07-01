@@ -95,10 +95,11 @@ export function WaferHeatmap() {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (isPanning) {
-      setPan({
-        x: pan.x + e.movementX,
-        y: pan.y + e.movementY,
-      });
+      setPan((prev) => ({
+        x: prev.x + e.movementX,
+        y: prev.y + e.movementY,
+      }));
+      setTooltip(null);
       return;
     }
 

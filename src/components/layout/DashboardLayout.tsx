@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNavbar } from "@/components/layout/TopNavbar";
-import type { SidebarFilters } from "@/types/dashboard";
+import { MobileSidebarOverlay } from "@/components/layout/MobileSidebarOverlay";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
   hideQuickFilters?: boolean;
   searchPlaceholder?: string;
   primaryActionLabel?: string;
+  pageId?: string;
 }
 
 export function DashboardLayout({
@@ -21,28 +22,30 @@ export function DashboardLayout({
   hideQuickFilters,
   searchPlaceholder,
   primaryActionLabel,
+  pageId = "dashboard",
 }: DashboardLayoutProps) {
-  const [filters, setFilters] = useState<SidebarFilters>({
-    dateRange: "7d",
-    fab: "fab-12",
-    tester: "ate-01",
-    product: "chip-x7",
-  });
+  const contentRef = useRef<HTMLElement>(null);
 
   return (
     <div className="dashboard-shell">
-      <Sidebar
-        filters={filters}
-        onFiltersChange={setFilters}
-        hideQuickFilters={hideQuickFilters}
-      />
+      <Sidebar hideQuickFilters={hideQuickFilters} />
+      <MobileSidebarOverlay hideQuickFilters={hideQuickFilters} />
       <TopNavbar
         title={title}
         subtitle={subtitle}
         searchPlaceholder={searchPlaceholder}
         primaryActionLabel={primaryActionLabel}
+        pageId={pageId}
+        contentRef={contentRef}
       />
-      <main className="dashboard-main">{children}</main>
+      <main
+        ref={contentRef}
+        className="dashboard-main"
+        data-export-title={title}
+        tabIndex={-1}
+      >
+        {children}
+      </main>
     </div>
   );
 }

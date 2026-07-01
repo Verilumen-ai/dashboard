@@ -5,6 +5,11 @@ export type RecommendationTab =
   | "lbist"
   | "wafer";
 
+export type RecommendationAgentTab =
+  | "pattern-agent"
+  | "scan-debug-agent"
+  | "test-optimization-agent";
+
 export type Priority = "Critical" | "High" | "Medium" | "Low";
 
 export interface RecKPI {
@@ -16,6 +21,78 @@ export interface RecKPI {
   sparkline: number[];
   icon: string;
   positiveIsGood?: boolean;
+}
+
+export interface CenterKPI extends RecKPI {
+  subtitle?: string;
+  status?: string;
+  statusVariant?: "success" | "warning" | "info" | "neutral" | "danger";
+  description: string;
+}
+
+export interface AgentMeta {
+  title: string;
+  responsibilities: string[];
+  inputs: string[];
+  outputs: string[];
+}
+
+export interface PatternRecRow {
+  recommendationId: string;
+  patternId: string;
+  recommendation: string;
+  priority: Priority;
+  confidence: number;
+  coverageGain: string;
+  powerSaving: string;
+  status: string;
+}
+
+export interface ScanDebugRecRow {
+  recommendationId: string;
+  category: string;
+  scanChain: string;
+  rootCause: string;
+  recommendation: string;
+  priority: Priority;
+  confidence: number;
+  engineer: string;
+  status: string;
+  expectedImpact: string;
+}
+
+export interface TestOptRecRow {
+  recommendationId: string;
+  optimizationType: string;
+  currentValue: string;
+  optimizedValue: string;
+  estimatedBenefit: string;
+  priority: Priority;
+  confidence: number;
+  status: string;
+  assignedEngineer: string;
+}
+
+export interface KPISection {
+  title: string;
+  kpis: CenterKPI[];
+}
+
+export interface AgentSummary {
+  title: string;
+  subtitle: string;
+  metrics: { label: string; value: string }[];
+}
+
+export interface EnterpriseExecutiveSummary {
+  patternsRemoved: number;
+  coverageGain: string;
+  powerSaving: string;
+  yieldImprovement: string;
+  testTimeReduction: string;
+  costReduction: string;
+  roi: string;
+  aiConfidence: string;
 }
 
 export interface HealthSegment {

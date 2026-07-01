@@ -1,7 +1,6 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { RecommendationActionButtons } from "@/components/platform/RecommendationActionButtons";
 import { VerticalBarChart } from "@/components/scan-chain/charts/BarCharts";
 import { TrendLineChart } from "@/components/scan-chain/charts/LineCharts";
 import { DistributionPie } from "@/components/scan-chain/charts/PieCharts";
@@ -44,7 +43,7 @@ export function MbistTab() {
           { key: "priority", label: "Priority", render: (row) => <PriorityBadge priority={row.priority} /> },
           { key: "confidence", label: "Confidence", render: (row) => `${row.confidence}%` },
           { key: "expectedYield", label: "Expected Yield" },
-          { key: "action", label: "Action", sortable: false, render: () => <Button variant="ghost" size="sm" className="h-7 text-xs text-[#7C3AED]">Apply<ArrowUpRight className="ml-1 h-3 w-3" /></Button> },
+          { key: "action", label: "Action", sortable: false, render: (row) => <RecommendationActionButtons id={row.id} /> },
         ]}
       />
     </div>

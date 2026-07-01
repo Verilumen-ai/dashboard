@@ -61,7 +61,7 @@ interface UploadLogFileModalProps {
 }
 
 export function UploadLogFileModal({ open, onOpenChange }: UploadLogFileModalProps) {
-  const { addLogUpload, updateLogStatus, showToast, lastAILogSummary, setLastAILogSummary } = useUpload();
+  const { addLogUpload, updateLogStatus, showToast, lastAILogSummary, setLastAILogSummary, cacheFileContent } = useUpload();
   const [files, setFiles] = useState<File[]>([]);
   const [logSource, setLogSource] = useState<LogModule>("Auto Detect");
   const [testerType, setTesterType] = useState<TesterType>("V93000");
@@ -159,6 +159,7 @@ export function UploadLogFileModal({ open, onOpenChange }: UploadLogFileModalPro
     updateLogStatus(id, "Processing");
     await runPipeline();
     updateLogStatus(id, "Completed", "3m 24s");
+    cacheFileContent(id, files.map((f) => f.name).join("\n"));
     setLastAILogSummary({ ...lastAILogSummary, filesProcessed: String(files.length) });
     setShowSummary(true);
     setUploading(false);
